@@ -18,9 +18,7 @@ import {
   HIGH_PRIORITY_REQUEST,
   IMAGE_FILE_EXTENSIONS,
   MILLISECONDS_IN_DAY,
-  MILLISECONDS_IN_MINUTE,
   PICTURES_FOLDER,
-  PROMPT_FILE,
   SLIDESHOW_FILE,
   SLIDESHOW_TIMEOUT_IN_MILLISECONDS,
   UNSUPPORTED_SLIDESHOW_EXTENSIONS,
@@ -68,8 +66,9 @@ const useWallpaper = (
   );
   const wallpaperTimerRef = useRef<number>();
   const failedOffscreenContext = useRef(false);
+
   const loadWallpaper = useCallback(
-    async (keepCanvas?: boolean) => {
+    (keepCanvas?: boolean) => {
       if (!desktopRef.current) return;
 
       let config: WallpaperConfig | undefined;
@@ -106,16 +105,6 @@ const useWallpaper = (
                 forwardSpeed: -0.25,
               }),
         };
-      } else if (wallpaperName === "STABLE_DIFFUSION") {
-        const promptsFilePath = `${PICTURES_FOLDER}/${PROMPT_FILE}`;
-
-        if (await exists(promptsFilePath)) {
-          config = {
-            prompts: JSON.parse(
-              (await readFile(promptsFilePath))?.toString() || "[]"
-            ) as [string, string][],
-          };
-        }
       }
 
       document.documentElement.style.setProperty(
@@ -159,36 +148,6 @@ const useWallpaper = (
               }
             }
           );
-          if (wallpaperName === "STABLE_DIFFUSION") {
-            const loadingStatus = document.createElement("div");
-
-            loadingStatus.id = "loading-status";
-
-            desktopRef.current?.append(loadingStatus);
-
-            window.WallpaperDestroy = () => {
-              loadingStatus.remove();
-              window.WallpaperDestroy = undefined;
-            };
-
-            wallpaperWorker.current.addEventListener(
-              "message",
-              ({ data }: { data: WallpaperMessage }) => {
-                if (data.type === "[error]") {
-                  setWallpaper("VANTA");
-                } else if (data.type) {
-                  loadingStatus.textContent = data.message || "";
-                } else if (!data.message) {
-                  wallpaperTimerRef.current = window.setTimeout(
-                    () => loadWallpaper(true),
-                    MILLISECONDS_IN_MINUTE * 10
-                  );
-                }
-
-                loadingStatus.style.display = data.message ? "block" : "none";
-              }
-            );
-          }
         }
       } else if (WALLPAPER_PATHS[wallpaperName]) {
         WALLPAPER_PATHS[wallpaperName]()
@@ -202,8 +161,6 @@ const useWallpaper = (
     },
     [
       desktopRef,
-      exists,
-      readFile,
       setWallpaper,
       vantaWireframe,
       wallpaperImage,
@@ -211,6 +168,7 @@ const useWallpaper = (
       wallpaperWorker,
     ]
   );
+
   const getAllImages = useCallback(
     async (baseDirectory: string): Promise<string[]> =>
       (await readdir(baseDirectory)).reduce<Promise<string[]>>(
@@ -233,6 +191,7 @@ const useWallpaper = (
       ),
     [readdir, lstat]
   );
+
   const loadFileWallpaper = useCallback(async () => {
     const [, currentWallpaperUrl] =
       /"(.*?)"/.exec(document.documentElement.style.background) || [];
@@ -427,7 +386,6 @@ const useWallpaper = (
   }, [
     colors,
     desktopRef,
-    exists,
     getAllImages,
     loadWallpaper,
     readFile,
@@ -437,6 +395,7 @@ const useWallpaper = (
     wallpaperImage,
     wallpaperName,
     writeFile,
+    exists,
   ]);
 
   useEffect(() => {
