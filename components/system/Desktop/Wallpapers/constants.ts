@@ -47,6 +47,8 @@ export const WALLPAPER_WORKERS: Record<string, (info?: string) => Worker> = {
     ),
 };
 
+export const L33t = "components/system/Desktop/Wallpapers/L33t/L33t.png"; // Add the path to your custom wallpaper image
+
 type WallpaperMenuItem = {
   id: string;
   name?: string;
@@ -57,7 +59,6 @@ type WallpaperMenuItem = {
 export const WALLPAPER_MENU: WallpaperMenuItem[] = [
   {
     id: "APOD",
-    startsWith: true,
   },
   {
     id: "COASTAL_LANDSCAPE",
@@ -82,6 +83,10 @@ export const WALLPAPER_MENU: WallpaperMenuItem[] = [
   {
     id: "VANTA",
     name: "Vanta Waves",
+  },
+  {
+    id: "L33t",
+    name: "L33t",
     startsWith: true,
   },
 ];

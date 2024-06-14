@@ -42,6 +42,7 @@
     "@monaco-editor/loader": "^1.4.0",
     "@panzoom/panzoom": "^4.5.1",
     "@prettier/plugin-xml": "^3.4.1",
+    "@tanstack/react-query": "^5.45.0",
     "@thirdweb-dev/chains": "^0.1.116",
     "@thirdweb-dev/react": "^4.6.31",
     "@thirdweb-dev/sdk": "^4.0.92",

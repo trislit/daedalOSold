@@ -6,6 +6,7 @@ import {
   BASE_VIDEO_SELECTOR,
   WALLPAPER_PATHS,
   WALLPAPER_WORKERS,
+  L33t,
   bgPositionSize,
 } from "components/system/Desktop/Wallpapers/constants";
 import { type WallpaperConfig } from "components/system/Desktop/Wallpapers/types";
@@ -155,6 +156,8 @@ const useWallpaper = (
             wallpaper?.(desktopRef.current, config)
           )
           .catch(() => setWallpaper("VANTA"));
+      } else if (wallpaperName === "L33t") {
+        setWallpaper(L33t);
       } else {
         setWallpaper("VANTA");
       }
